@@ -1,0 +1,14 @@
+#!/bin/sh
+
+echo "[*] Installing python-pam using pip3..."
+
+if ! command -v pip3 &>/dev/null; then
+    echo "[*] pip3 not found, installing..."
+    apt update
+    apt install -y python3-pip python3-setuptools python3-wheel
+fi
+pip3 install --break-system-packages six
+pip3 install --break-system-packages python-pam
+
+
+

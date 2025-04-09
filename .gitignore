@@ -1,0 +1,56 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.swp
+*.swo
+.Python
+env/
+venv/
+*.egg-info/
+
+# Live-build build directories
+.build
+binary/
+chroot/
+cache/
+config/binary
+config/bootstrap
+config/chroot
+config/includes
+config/hooks/normal/*.log
+config/package-lists/*.log
+config/includes.chroot/tmp/
+
+
+# Log files
+*.log
+
+# OS images and ISOs
+*.iso
+*.img
+*.bin
+*.install
+*.live
+*.files
+*.zsync
+*.packages
+*.contents
+binary.*
+
+# Editor/IDE stuff
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# OS/misc
+.DS_Store
+*.bak
+*.tmp
+*~
+
+# Optional: Ignore local configs/scripts
+local_config.sh
+custom_scripts/
