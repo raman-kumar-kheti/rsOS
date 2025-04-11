@@ -3,7 +3,8 @@
 from PyQt6.QtWidgets import QApplication, QWidget, QLineEdit, QVBoxLayout, QGraphicsBlurEffect, QLabel, QHBoxLayout
 from PyQt6.QtCore import Qt, QTimer
 from PyQt6.QtGui import QPixmap, QPainter, QBrush, QColor
-import sys, datetime, pam, pwd
+import sys, datetime, pam, pwd, os
+SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
 
 class LoginWindow(QWidget):
     def __init__(self):
@@ -20,10 +21,10 @@ class LoginWindow(QWidget):
         backgroundEffect.setBlurRadius(15)
         self.background_widget.setGraphicsEffect(backgroundEffect)
 
-        self.background_widget.setStyleSheet("""
+        self.background_widget.setStyleSheet(f"""
             background-repeat: no-repeat;
             background-position: center;
-            background-image: url(login_screen2.jpg);
+            background-image: url({os.path.join(SCRIPT_DIR, "login_screen2.jpg")});
         """)
 
         self.main_layout = QVBoxLayout(self)
@@ -64,7 +65,7 @@ class LoginWindow(QWidget):
         profilePicture = QVBoxLayout()
         profile_picture = QLabel(self)
 
-        pixmap = QPixmap("profile_pictures.png")
+        pixmap = QPixmap(os.path.join(SCRIPT_DIR, "profile_pictures.png"))
         scaled_pixmap = pixmap.scaled(180, 180, Qt.AspectRatioMode.KeepAspectRatio)
 
         rounded_pixmap = QPixmap(180, 180)
@@ -124,8 +125,8 @@ class LoginWindow(QWidget):
 
     def get_username(self):
             username = self.get_human_users_mac()
-            self.user_name = username[0]['username']
-            self.full_name.setText(username[0]['fullname'])
+            self.user_name = username[1]['username']
+            self.full_name.setText(username[1]['fullname'])
             self.full_name.setStyleSheet("""
             QLabel {
                 padding: 5px;
@@ -141,7 +142,6 @@ class LoginWindow(QWidget):
         user = pam.pam()
 
         if password:
-            print(f"Password: {password}")
             if user.authenticate(self.user_name, password):
                 self.close()
                 sys.exit(0)
