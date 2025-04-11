@@ -1,10 +1,34 @@
 #!/usr/bin/env python3
 
-from PyQt6.QtWidgets import QApplication, QWidget, QLineEdit, QVBoxLayout, QGraphicsBlurEffect, QLabel, QHBoxLayout
-from PyQt6.QtCore import Qt, QTimer
-from PyQt6.QtGui import QPixmap, QPainter, QBrush, QColor
-import sys, datetime, pam, pwd, os
+from PyQt6.QtWidgets import (
+    QApplication, QWidget, QLineEdit, QVBoxLayout,
+    QGraphicsBlurEffect, QLabel, QHBoxLayout, QSpacerItem, QSizePolicy
+)
+from PyQt6.QtCore import Qt, QTimer, QSize, QThreadPool, QRunnable, pyqtSignal, QObject, QPropertyAnimation, QPoint, QEasingCurve
+from PyQt6.QtGui import QPixmap, QPainter, QBrush, QColor, QMovie
+
+import sys, datetime, pwd, os
+
 SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
+
+
+class WorkerSignals(QObject):
+    finished = pyqtSignal(bool)
+
+
+class AuthWorker(QRunnable):
+    def __init__(self, username, password):
+        super().__init__()
+        self.username = username
+        self.password = password
+        self.signals = WorkerSignals()
+
+    def run(self):
+        import pam
+        user = pam.pam()
+        result = user.authenticate(self.username, self.password)
+        self.signals.finished.emit(result)
+
 
 class LoginWindow(QWidget):
     def __init__(self):
@@ -12,7 +36,7 @@ class LoginWindow(QWidget):
 
         self.setWindowFlags(Qt.WindowType.Window | Qt.WindowType.CustomizeWindowHint)
         self.setStyleSheet("background: transparent;")
-        self.setGeometry(0, 0, 1920, 1080)  # Adjust window size
+        self.setGeometry(0, 0, 1920, 1080)
 
         self.background_widget = QWidget(self)
         self.background_widget.setGeometry(self.rect())
@@ -44,6 +68,7 @@ class LoginWindow(QWidget):
                 margin-top: 40px;
             }
         """)
+
         self.full_name = QLabel()
         self.user_name = None
 
@@ -55,8 +80,9 @@ class LoginWindow(QWidget):
         self.main_layout.addLayout(self.top_layout)
 
         self.setup_profile_picture()
-
         self.setup_user_inputs()
+
+        self.threadpool = QThreadPool.globalInstance()
 
     def update_time(self):
         self.currentTime.setText(datetime.datetime.now().strftime("%I:%M"))
@@ -87,19 +113,24 @@ class LoginWindow(QWidget):
         self.main_layout.addLayout(profilePicture)
 
     def setup_user_inputs(self):
-
         user_name_label = QHBoxLayout()
         user_name_label.setAlignment(Qt.AlignmentFlag.AlignHCenter | Qt.AlignmentFlag.AlignBottom)
 
         password = QHBoxLayout()
-        password.setAlignment(Qt.AlignmentFlag.AlignHCenter |Qt.AlignmentFlag.AlignTop)
-
+        password.setAlignment(Qt.AlignmentFlag.AlignHCenter | Qt.AlignmentFlag.AlignTop)        
         self.get_username()
+
+        self.loginSpinner = QMovie(os.path.join(SCRIPT_DIR, "loading-loading-forever.gif"))
+        self.loginMover = QLabel(self)
+        self.loginMover.setMovie(self.loginSpinner)
+        self.loginMover.setVisible(False)
+        self.loginSpinner.setScaledSize(QSize(15, 15))
 
         self.user_password = QLineEdit(self)
         self.user_password.setPlaceholderText("Enter Password")
         self.user_password.setEchoMode(QLineEdit.EchoMode.Password)
         self.user_password.setFixedSize(170, 30)
+
         self.user_password.setStyleSheet("""
             QLineEdit {
                 background-color: rgba(255, 255, 255, 0.6);
@@ -118,16 +149,19 @@ class LoginWindow(QWidget):
         user_name_label.addWidget(self.full_name)
         password.addWidget(self.user_password)
 
+        self.loginMover.setParent(self)
+        self.loginMover.move(1055, 815)
+        self.loginMover.show()
+
 
         self.main_layout.addLayout(user_name_label)
         self.main_layout.addLayout(password)
 
-
     def get_username(self):
-            username = self.get_human_users_mac()
-            self.user_name = username[1]['username']
-            self.full_name.setText(username[1]['fullname'])
-            self.full_name.setStyleSheet("""
+        username = self.get_human_users_mac()
+        self.user_name = username[1]['username']
+        self.full_name.setText(username[1]['fullname'])
+        self.full_name.setStyleSheet("""
             QLabel {
                 padding: 5px;
                 color: rgba(255, 255, 255, 0.9);
@@ -139,78 +173,51 @@ class LoginWindow(QWidget):
 
     def get_input(self):
         password = self.user_password.text()
-        user = pam.pam()
+        if not password:
+            return
 
-        if password:
-            if user.authenticate(self.user_name, password):
-                self.close()
-                sys.exit(0)
-            else:
-                print("Unable to login")
-                self.run_animation()
+        self.loginSpinner.start()
+        self.loginMover.setVisible(True)
+        self.loginMover.setFixedSize(15, 15)
+
+
+        worker = AuthWorker(self.user_name, password)
+        worker.signals.finished.connect(self.on_auth_finished)
+        self.threadpool.start(worker)
+
+    def on_auth_finished(self, isTrue):
+        if isTrue:
+            self.close()
+            sys.exit(0)
+        else:
+            self.loginSpinner.stop()
+            self.loginMover.setVisible(False)
+            self.run_animation()
 
     def run_animation(self):
-        original_style = self.user_password.styleSheet()
-        
-        self.user_password.setStyleSheet("""
-            QLineEdit {
-                background-color: rgba(255, 255, 255, 0.6);
-                border-radius: 15px;
-                color: #333;
-                border-width:1px;
-                border-color:#545454;
-                border-style:solid;
-                font-size: 16px;
-                margin-left:0px;
-                padding-left:10px;
+        animation = QPropertyAnimation(self.user_password, b"pos")
+        animation.setDuration(350)
+        animation.setLoopCount(1)
 
-            }
-        """)
-        
-        shake_count = 0
-        max_shakes = 4
-        
-        def shake():
-            nonlocal shake_count
-            if shake_count >= max_shakes:
-                self.user_password.setStyleSheet(original_style)
-                return
-                
-            if shake_count % 2 == 0:
-                self.user_password.setStyleSheet("""
-                    QLineEdit {
-                        background-color: rgba(255, 255, 255, 0.5);
-                        border-radius: 15px;
-                        color: #333;
-                        font-size: 16px;
-                        margin-left:10px;
-                        margin-right: 0px;
-                        border-width:1px;
-                        border-color:#545454;
-                        border-style:solid;
-                        padding-left:10px;
-                    }
-                """)
-            else:
-                self.user_password.setStyleSheet("""
-                    QLineEdit {
-                        background-color: rgba(255, 255, 255, 0.6);
-                        border-radius: 15px;
-                        color: #333;
-                        font-size: 16px;
-                        margin-left:0px;
-                        margin-right:10px;
-                        border-width:1px;
-                        border-color:#545454;
-                        border-style:solid;
-                        padding-left:10px;
-                    }
-                """)
-            
-            shake_count += 1
-            QTimer.singleShot(110, shake)
-        shake()
+        original_pos = self.user_password.pos()
 
+        animation.setKeyValueAt(0, original_pos)
+        animation.setKeyValueAt(0.1, original_pos + QPoint(-10, 0))
+        animation.setKeyValueAt(0.2, original_pos + QPoint(10, 0))
+        animation.setKeyValueAt(0.3, original_pos + QPoint(-10, 0))
+        animation.setKeyValueAt(0.4, original_pos + QPoint(10, 0))
+        animation.setKeyValueAt(0.5, original_pos + QPoint(-5, 0))
+        animation.setKeyValueAt(0.6, original_pos + QPoint(5, 0))
+        animation.setKeyValueAt(0.7, original_pos + QPoint(-2, 0))
+        animation.setKeyValueAt(0.8, original_pos + QPoint(2, 0))
+        animation.setKeyValueAt(0.9, original_pos)
+        animation.setKeyValueAt(1, original_pos)
+
+        animation.setEasingCurve(QEasingCurve.Type.InOutQuad)
+        animation.start()
+        
+        # Prevent garbage collection
+        self.shake_animation = animation
 
     def get_human_users_mac(self):
         users = []
@@ -225,7 +232,6 @@ class LoginWindow(QWidget):
 if __name__ == "__main__":
     app = QApplication([])
 
-    # Create and display the login window
     window = LoginWindow()
     window.showFullScreen()
 
