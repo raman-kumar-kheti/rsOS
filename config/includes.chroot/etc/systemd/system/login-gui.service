@@ -1,0 +1,13 @@
+[Unit]
+Description=Auto Login to X and start custom login screen
+After=multi-user.target
+
+[Service]
+ExecStart=/usr/local/bin/gui-login-x.sh
+StandardInput=tty
+StandardOutput=journal
+StandardError=journal
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
