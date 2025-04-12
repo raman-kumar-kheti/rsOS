@@ -2,7 +2,7 @@
 
 from PyQt6.QtWidgets import (
     QApplication, QWidget, QLineEdit, QVBoxLayout,
-    QGraphicsBlurEffect, QLabel, QHBoxLayout, QSpacerItem, QSizePolicy
+    QGraphicsBlurEffect, QLabel, QHBoxLayout 
 )
 from PyQt6.QtCore import Qt, QTimer, QSize, QThreadPool, QRunnable, pyqtSignal, QObject, QPropertyAnimation, QPoint, QEasingCurve
 from PyQt6.QtGui import QPixmap, QPainter, QBrush, QColor, QMovie
@@ -10,7 +10,6 @@ from PyQt6.QtGui import QPixmap, QPainter, QBrush, QColor, QMovie
 import sys, datetime, pwd, os, subprocess
 
 SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
-
 
 class WorkerSignals(QObject):
     finished = pyqtSignal(bool)
@@ -187,8 +186,8 @@ class LoginWindow(QWidget):
 
     def on_auth_finished(self, isTrue):
         if isTrue:
-            subprocess.run(["/usr/local/bin/switch-user.sh", self.user_name])
             self.close()
+            subprocess.run(["/usr/local/bin/switch-user.sh", self.user_name])
             sys.exit(0)
         else:
             self.loginSpinner.stop()
