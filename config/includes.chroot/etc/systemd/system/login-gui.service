@@ -8,6 +8,8 @@ StandardInput=tty
 StandardOutput=journal
 StandardError=journal
 Restart=always
+RestartSec=2
+TTYPath=/dev/tty1
 
 [Install]
 WantedBy=multi-user.target
