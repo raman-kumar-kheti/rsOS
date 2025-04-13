@@ -10,6 +10,7 @@ StandardError=journal
 Restart=always
 RestartSec=2
 TTYPath=/dev/tty1
+User=root
 
 [Install]
 WantedBy=multi-user.target
