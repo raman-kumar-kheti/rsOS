@@ -17,6 +17,6 @@ export XDG_RUNTIME_DIR="/run/user/$USER_ID"
 export SHELL="/bin/bash"
 
 rm -rf /tmp/.X11-unix /tmp/.X0-lock 2>/dev/null
-pkill -x X
+pkill -x X  
 
 exec openvt -f -c 1 -- login -f "$TARGET_USER"
