@@ -3,12 +3,11 @@ Description=Auto Login to X and start custom login screen
 After=multi-user.target
 
 [Service]
+Type=oneshot
 ExecStart=/usr/local/bin/gui-login-x.sh
 StandardInput=tty
 StandardOutput=journal
 StandardError=journal
-Restart=always
-RestartSec=2
 TTYPath=/dev/tty1
 User=root
 
