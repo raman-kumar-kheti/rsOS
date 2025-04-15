@@ -1,6 +1,8 @@
 [Unit]
 Description=Auto Login to X and start custom login screen
-After=multi-user.target
+After=graphical.target
+Requires=graphical.target
+Conflicts=getty@tty1.service
 
 [Service]
 Type=oneshot
@@ -12,4 +14,4 @@ TTYPath=/dev/tty1
 User=root
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=graphical.target
