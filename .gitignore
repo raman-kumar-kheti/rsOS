@@ -15,9 +15,6 @@ venv/
 binary/
 chroot/
 cache/
-config/binary
-config/bootstrap
-config/chroot
 config/includes
 config/hooks/normal/*.log
 config/package-lists/*.log
