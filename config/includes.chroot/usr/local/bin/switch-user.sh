@@ -1,5 +1,7 @@
 #!/bin/bash
 
+pkill -f /opt/bootScreen/boot_screen.py
+
 TARGET_USER="$1"
 
 if [ -z "$TARGET_USER" ]; then
