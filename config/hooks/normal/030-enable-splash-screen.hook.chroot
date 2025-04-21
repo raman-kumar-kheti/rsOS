@@ -1,2 +1,0 @@
-#!/bin/bash
-systemctl enable splash-screen.service

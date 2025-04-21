@@ -33,6 +33,7 @@ class LoginWindow(QWidget):
     def __init__(self):
         super().__init__()
 
+        subprocess.run("/usr/local/bin/kill-splash-screen.sh")
         self.setWindowFlags(Qt.WindowType.Window | Qt.WindowType.CustomizeWindowHint)
         self.setStyleSheet("background: transparent;")
         self.setGeometry(0, 0, 1920, 1080)
