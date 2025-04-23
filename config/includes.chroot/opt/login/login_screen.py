@@ -48,7 +48,7 @@ class LoginWindow(QWidget):
         self.background_widget.setStyleSheet(f"""
             background-repeat: no-repeat;
             background-position: center;
-            background-image: url({os.path.join(SCRIPT_DIR, "login_screen2.jpg")});
+            background-image: url("/opt/wallpapers/desktop_wallpaper1.jpg");
         """)
 
         self.main_layout = QVBoxLayout(self)

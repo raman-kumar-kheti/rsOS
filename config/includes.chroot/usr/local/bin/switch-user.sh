@@ -16,7 +16,11 @@ export LOGNAME="$TARGET_USER"
 export XDG_RUNTIME_DIR="/run/user/$USER_ID"
 export SHELL="/bin/bash"
 
-rm -rf /tmp/.X11-unix /tmp/.X0-lock 2>/dev/null
-pkill -x X  
+# rm -rf /tmp/.X11-unix /tmp/.X0-lock 2>/dev/null
+# pkill -x X  
 
-exec openvt -f -c 1 -- login -f "$TARGET_USER"
+# exec openvt -f -c 1 -- login -f "$TARGET_USER"
+
+exec feh --bg-scale /opt/wallpaper/desktop_wallpaper1.jpg &
+openbox-session & /opt/desktop/desktop_screen.py
+

@@ -2,7 +2,6 @@
 
 export DISPLAY=:0
 
-openbox-session &
 /opt/bootScreen/boot_screen.py &
-sleep 5
+sleep 3
 /opt/login/login_screen.py 
