@@ -16,11 +16,6 @@ class SplashScreen(QWidget):
 
         self.main_layout = QVBoxLayout(self)
         self.main_layout.setAlignment(Qt.AlignmentFlag.AlignCenter | Qt.AlignmentFlag.AlignBottom)
-        bottomBtn = QPushButton(
-            text="Bottom",
-            parent=self
-        )
-        bottomBtn.clicked.connect(self.closeSplashScreen)
 
         self.os_logo = QLabel()
         self.os_logo.setPixmap(QPixmap(os.path.join(SCRIPT_DIR,"os_logo.png")).scaled(200, 200, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation))
@@ -51,18 +46,13 @@ class SplashScreen(QWidget):
         middle_container = QVBoxLayout()
         middle_container.setAlignment(Qt.AlignmentFlag.AlignHCenter)
         middle_container.setSpacing(180)
-        middle_container.addWidget(bottomBtn)
         middle_container.addWidget(self.os_logo)
         middle_container.addWidget(self.spinner_holder, alignment=Qt.AlignmentFlag.AlignHCenter)
 
 
         self.main_layout.addLayout(middle_container)
         self.main_layout.addWidget(self.bottom_heading)
-
-    def closeSplashScreen(self):
-            print("Is This method called")
-            self.close()
-            sys.exit(0)
+        
 if __name__ == "__main__":
     splash_screen = QApplication([])
 
