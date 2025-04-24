@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from PyQt6.QtWidgets import (QWidget, QApplication, QVBoxLayout, QLabel, QPushButton)
+from PyQt6.QtWidgets import (QWidget, QApplication, QVBoxLayout, QLabel)
 from PyQt6.QtCore import Qt, QSize
 from PyQt6.QtGui import QMovie, QPixmap, QIcon
 import os, sys
