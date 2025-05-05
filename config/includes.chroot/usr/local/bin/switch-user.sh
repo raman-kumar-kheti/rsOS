@@ -16,12 +16,9 @@ export LOGNAME="$TARGET_USER"
 export XDG_RUNTIME_DIR="/run/user/$USER_ID"
 export SHELL="/bin/bash"
 
-# rm -rf /tmp/.X11-unix /tmp/.X0-lock 2>/dev/null
-# pkill -x X  
-
-# exec openvt -f -c 1 -- login -f "$TARGET_USER"
-
 feh --bg-scale /opt/wallpapers/desktop_wallpaper1.jpg &
 picom --config ~/.config/picom/picom.conf --experimental-backends &
-openbox-session & /opt/desktop/desktop_screen.py
+sleep 1
+openbox-session & /opt/desktop/desktop_screen.py &
+idesk 
 
