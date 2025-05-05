@@ -114,10 +114,10 @@ class ToAreaSection(QWidget):
         rect = self.rect()
         radius = 17
 
-        bg_color = QColor(0, 0, 0, 90)
+        bg_color = QColor(0, 0, 0, 30)
         painter.setBrush(bg_color)
 
-        border_color = QColor("#4a4949")
+        border_color = QColor(0, 0, 0, 80)
         pen = painter.pen()
         pen.setColor(border_color)
         pen.setWidthF(0.2)
