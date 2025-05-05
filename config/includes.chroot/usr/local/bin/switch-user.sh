@@ -21,6 +21,7 @@ export SHELL="/bin/bash"
 
 # exec openvt -f -c 1 -- login -f "$TARGET_USER"
 
-exec feh --bg-scale /opt/wallpapers/desktop_wallpaper1.jpg &
+feh --bg-scale /opt/wallpapers/desktop_wallpaper1.jpg &
+picom --config ~/.config/picom/picom.conf --experimental-backends &
 openbox-session & /opt/desktop/desktop_screen.py
 
