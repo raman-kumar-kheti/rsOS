@@ -22,5 +22,7 @@ export SHELL="/bin/bash"
 # exec openvt -f -c 1 -- login -f "$TARGET_USER"
 
 pcmanfm --desktop &
+sleep 1
 picom --config ~/.config/picom/picom.conf --experimental-backends &
-openbox-session & /opt/desktop/desktop_screen.py
+openbox-session &
+/opt/desktop/desktop_screen.py

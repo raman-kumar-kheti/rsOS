@@ -1,1 +1,1 @@
-tput reset
+# tput reset
