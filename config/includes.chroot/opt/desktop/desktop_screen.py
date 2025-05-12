@@ -356,11 +356,11 @@ class PowerController(QWidget):
 
     def shutdown(self):
         print("Shut down")
-        # subprocess.run(["shutdown", "-h", "now"])
+        subprocess.run(["shutdown", "-h", "now"])
 
     def restart(self):
         print("Restart")
-        # subprocess.run(["reboot"])
+        subprocess.run(["reboot"])
 
     def sleep(self):
         print("sleep")
