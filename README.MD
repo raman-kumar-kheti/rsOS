@@ -1,5 +1,8 @@
 # 🛠 Debian-Based OS with GUI 
 
+![Alt text](./diagram.png)
+
+
 This project is a custom Debian-based operating system built using 
 
 ## 🧼 Clean Build Environment
