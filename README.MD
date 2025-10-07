@@ -38,5 +38,14 @@ Generated ISO will be located in the project root directory.
 
 - No use of `sudo` inside scripts or setup (OS-level configuration).
 - GUI login screen is purely custom and replaces default `getty`.
+
+## Operating System Screenshots
+
+![Alt text](./desktop-screen.png)
+![Alt text](./lock-screen.png)
+
+
+
+
 - No static users created — system dynamically handles user detection.
 - Use `.xinitrc` under `/etc/skel` to prepopulate new user configs.
